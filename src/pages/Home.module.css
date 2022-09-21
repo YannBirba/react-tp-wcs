@@ -1,0 +1,6 @@
+.CardRow {
+    display: grid;
+    grid-template-columns: repeat(3, 32%);
+    justify-content: space-between;
+    gap: 1rem;
+}
