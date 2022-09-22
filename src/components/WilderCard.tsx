@@ -3,9 +3,6 @@ import React, { MouseEvent } from "react";
 // @ts-ignore
 import blank_profile from "../assets/blank_profile.png";
 import Skill from "./Skill";
-// eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
-// @ts-ignore
-import styles from "./WilderCard.module.css";
 import { Upvote } from "../types/Upvote";
 
 interface WilderCardProps {
@@ -29,15 +26,15 @@ const WilderCard: React.FC<WilderCardProps> = ({
 }) => {
   return (
     <article
+      className="wild-card bg-white shadow-md drop-shadow-lg rounded-lg p-4 flex-basis-0 flex-grow-0 flex-shrink-0 max-w-xs"
       onClick={onSelect}
-      className={styles.Card}
       aria-selected={isSelected}
     >
-      <img src={blank_profile} alt={`${name} profile`} />
+      <img className="max-w-full w-48" src={blank_profile} alt={`${name} profile`} />
       <h3>{name}</h3>
       {city !== undefined ? <p>{city}</p> : null}
       <h4>Wild Skills</h4>
-      <ul className={styles.Skills}>
+      <ul>
         {upvotes.length > 0 ? (
           upvotes.map((upvote) => (
             <Skill

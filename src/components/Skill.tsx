@@ -1,7 +1,4 @@
 import React, { MouseEvent } from "react";
-// eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
-// @ts-ignore
-import styles from "./Skill.module.css";
 
 interface SkillProps {
   name: string;
@@ -11,8 +8,8 @@ interface SkillProps {
 
 const Skill: React.FC<SkillProps> = ({ name, upvote, onUpvote }) => {
   return (
-    <li onClick={onUpvote} className={styles.Skill}>
-      {name} <span className={styles.Votes}>{upvote}</span>
+    <li onClick={onUpvote}>
+      {name} <span>{upvote}</span>
     </li>
   );
 };

@@ -1,13 +1,10 @@
 import React from "react";
-// eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
-// @ts-ignore
-import styles from "./Header.module.css";
 
 const Header: React.FC = () => {
     return (
-        <header className={styles.Header}>
+        <header className="bg-wcs-pink px-5 min-h-[75px] flex items-center">
             <div className="container">
-                <h1>Wilders Book</h1>
+                <h1 className="text-slate-50 text-2xl font-semibold">Wilders Book</h1>
             </div>
         </header>
     );

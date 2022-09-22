@@ -6,9 +6,6 @@ import React, {
   useEffect,
 } from "react";
 import WilderCard from "../components/WilderCard";
-// eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
-// @ts-ignore
-import styles from "./Home.module.css";
 import axios from "axios";
 import AddWilderForm from "../components/AddWilderForm";
 import UpdateWilderForm from "../components/UpdateWilderForm";
@@ -302,9 +299,9 @@ const Home: React.FC = () => {
   };
 
   return (
-    <main className="container">
-      <h2>Wilders</h2>
-      <section className={styles.CardRow}>
+    <main className="container max-w-7xl mx-auto p-5">
+      <h2 className="text-slate-700 text-3xl font-bold text-center">Wilders</h2>
+      <section className="flex gap-10 flex-wrap justify-center py-10">
         {wilders.length > 0 ? (
           wilders.map((wilder) => (
             <WilderCard
