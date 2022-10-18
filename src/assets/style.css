@@ -7,3 +7,19 @@
     @apply ring-2 ring-wcs-pink;
   }
 }
+
+html{
+  @apply font-sans scroll-smooth antialiased;
+}
+
+body{
+  @apply text-slate-800;
+}
+
+*{
+  @apply accent-wcs-pink;
+}
+
+input[type="text"], input[type="number"]{
+  @apply bg-white border border-gray-200 focus:border-wcs-pink focus:ring-1 focus:ring-wcs-pink focus:outline-none rounded-md py-1 px-2 my-1 drop-shadow;
+}

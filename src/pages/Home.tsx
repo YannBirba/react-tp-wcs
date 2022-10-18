@@ -14,12 +14,14 @@ import { Skill } from "../types/Skill";
 import { Upvote } from "../types/Upvote";
 import { EditWilderParams } from "../types/EditWilderParams";
 import { ManageSkillsForm } from "../components/ManageSkillsForm";
+import PlusIcon from "@heroicons/react/24/outline/PlusIcon";
 
 const Home: React.FC = () => {
   const [wilders, setWilders] = useState<Wilder[]>([]);
   const [selectedWilderId, setSelectedWilderId] = useState<number | null>(null);
   const [wilderToUpdate, setWilderToUpdate] = useState<Wilder | null>(null);
   const [skills, setSkills] = useState<Skill[]>([]);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const fetchWilders = async (): Promise<void> => {
     const data = await axios.get<{ data: Wilder[] }>(
@@ -154,7 +156,7 @@ const Home: React.FC = () => {
     await fetchWilders();
   };
 
-  const handleSelect = (wilder: Wilder): void => {
+  const handleEdit = (wilder: Wilder): void => {
     if (selectedWilderId === wilder.id) {
       setSelectedWilderId(null);
       setWilderToUpdate(null);
@@ -225,21 +227,24 @@ const Home: React.FC = () => {
       }
     });
 
-    const upvotesToUpdate = upvotesFromForm.filter((upvote: { id: number; value: number; }) => {
-      if (
-        wilderToUpdate?.upvotes !== undefined
-      ) {
-        const upvoteToUpdate = wilderToUpdate.upvotes.find(
-          (upvoteToFind) => upvoteToFind.id === upvote.id
-        );
+    const upvotesToUpdate = upvotesFromForm.filter(
+      (upvote: { id: number; value: number }) => {
+        if (wilderToUpdate?.upvotes !== undefined) {
+          const upvoteToUpdate = wilderToUpdate.upvotes.find(
+            (upvoteToFind) => upvoteToFind.id === upvote.id
+          );
 
-        if (upvoteToUpdate !== undefined && upvoteToUpdate.upvote !== upvote.value) {
-          return upvote;
+          if (
+            upvoteToUpdate !== undefined &&
+            upvoteToUpdate.upvote !== upvote.value
+          ) {
+            return upvote;
+          }
+          return null;
         }
         return null;
       }
-      return null;
-    });
+    );
 
     await editWilder({
       wilder,
@@ -280,6 +285,8 @@ const Home: React.FC = () => {
       return alert(error.response.data.message);
     }
     await fetchSkills();
+    setSelectedWilderId(null);
+    setWilderToUpdate(null);
   };
 
   const handleAddSkill = async (e: FormEvent): Promise<void> => {
@@ -296,12 +303,13 @@ const Home: React.FC = () => {
       return alert(error.response.data.message);
     }
     await fetchSkills();
+    setIsOpen(false);
   };
 
   return (
     <main className="container max-w-7xl mx-auto p-5">
       <h2 className="text-slate-700 text-3xl font-bold text-center">Wilders</h2>
-      <section className="flex gap-10 flex-wrap justify-center py-10">
+      <section className="flex gap-10 sm:flex-wrap sm:flex-row justify-center py-10 flex-col">
         {wilders.length > 0 ? (
           wilders.map((wilder) => (
             <WilderCard
@@ -313,22 +321,31 @@ const Home: React.FC = () => {
                 wilder.id !== undefined && handleDelete(e, wilder.id)
               }
               onUpvote={handleUpvote}
-              onSelect={() => handleSelect(wilder)}
-              isSelected={selectedWilderId === wilder.id}
+              onEdit={() => handleEdit(wilder)}
             />
           ))
         ) : (
           <h1>Pas de wilders à afficher</h1>
         )}
       </section>
-      {selectedWilderId !== null && wilderToUpdate !== null ? (
+      {selectedWilderId !== null && wilderToUpdate !== null && (
         <UpdateWilderForm
+          isOpen={!!(selectedWilderId !== null && wilderToUpdate !== null)}
           wilder={wilderToUpdate}
           updateWilder={handleUpdateWilder}
           skills={skills}
+          setIsOpen={ () => {
+            setSelectedWilderId(null);
+            setWilderToUpdate(null);
+          }}
         />
-      ) : (
-        <AddWilderForm onSubmit={handleSubmit} />
+      )}
+      {isOpen && (
+        <AddWilderForm
+          isOpen={isOpen}
+          onSubmit={handleSubmit}
+          setIsOpen={() => setIsOpen(!isOpen)}
+        />
       )}
       {skills.length > 0 && (
         <ManageSkillsForm
@@ -338,6 +355,14 @@ const Home: React.FC = () => {
           onAdd={handleAddSkill}
         />
       )}
+      <button
+        title="Ajouter un wilder"
+        aria-label="Ajouter un wilder"
+        className="fixed bg-wcs-pink p-4 bottom-0 right-0 m-4 rounded-full text-white hover:scale-95 active:scale-90 transition-all duration-400 ease-in-out drop-shadow-md shadow-lg"
+        onClick={() => setIsOpen(true)}
+      >
+        <PlusIcon width={30} />
+      </button>
     </main>
   );
 };
